@@ -1,0 +1,11 @@
+Origin: Nguyen Thanh (shin-dev)
+Label: shin-chan (N.Thanh)
+Suite: stable
+Version: 1.0
+Codename: ios
+Architecture: iphoneos-arm
+Components: main
+Description: Source Cydia Repo by Shin-chan (Nguyen Thanh)
+MD5Sum:
+ 356aa2cedec2dae74ab2be36930fc708 1177 Packages
+ 57f5a4c7cc527c5ba3455a03907e40c8 785 Packages.bz2

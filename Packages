@@ -1,0 +1,24 @@
+Package: git.shin.ytpp
+Architecture: iphoneos-arm
+Version: 1.4r-106
+Priority: optional
+Section: Tweaks
+Maintainer: nguyenthanh1995 <thanhnguyennguyen1995@gmail.com>
+Depends: mobilesubstrate, firmware (>= 7.0),com.unlimapps.uamediaexporthelper (>= 1.0r-15) | firmware (>= 10.0), com.unlimapps.uasharedtools (>= 2.2r-94)
+Conflicts: me.freemanrepo.cercube, com.cydia00.ytpp, com.unlimapps.jodeboxlib, com.unlimapps.ytpp
+Replaces: com.unlimapps.ytpp
+Filename: ./debs/git.shin.ytpp_1.4r-106.deb
+Size: 6668502
+MD5sum: f56b36488307cfc3688b2afd2960966a
+SHA1: b4ddf22d177b66c92fc5de9fcb5f4f340ab149ff
+SHA256: b386463b0badb9cbeee59bc8b069577695afcb981ab48f964e5405704c41972d
+SHA512: b822e845b3511edeabae292a14025ff104bb46ba4816853e3c1aeba29df927fabe1be739b7a18af119292aa784a4529d1be39992721394f197a8a592ff4c9ae9
+Homepage: https://nguyenthanh1995.github.io/
+Description: Download all YouTube Videos! Continue background playback and much more!!!
+Tag: purpose::extension, role::enduser
+Author: UnlimApps Inc
+Name: YT++ for YouTube
+dev: i4iphones
+Depiction: https://nguyenthanh1995.github.io/description.html?goto=git.shin.ytpp
+Sponsor: nguyenthanh1995 <https://nguyenthanh1995.github.io>
+
