@@ -4,7 +4,8 @@ const modules = require("./modules"),
    md5file = require("md5-file"),
    env = require("dotenv").config().parsed,
    readline = require("readline"),
-   path = require("path")
+   path = require("path"),
+   fsExtra = require("fs-extra")
 
    !(async () => {
       console.clear()
@@ -16,7 +17,7 @@ const modules = require("./modules"),
       !(await Promise.all(modules.readDebs("./debs")
          .map(async item => {
             const info = await modules.dpkgf(item)
-            let newpath = `${info.Package}_${info.Version}.deb`
+            let newpath = `${path.dirname(item)}/${info.Package}_${info.Version}.deb`
             if (path.basename(item, ".deb") != path.basename(newpath, ".deb")) {
                if (fs.existsSync(newpath) && fs.statSync(item).birthtimeMs > fs.statSync(newpath).birthtimeMs) {
                   fs.unlinkSync(item)
@@ -43,6 +44,14 @@ const modules = require("./modules"),
          @not build found and new packages
       */
 
+      if ( fs.existsSync("./tweaks.json") && fs.lstatSync("./tweaks.json").isDirectory() && fs.readdirSync("./tweaks.json").length ) {
+         console.log(chalk.grey("Removing tweaks.json/*..."))
+		   fsExtra.emptyDirSync("./tweaks.json")
+		   console.log(chalk.yellow("Removed tweaks.json/*"))
+		} else {
+         fs.mkdirSync("./tweaks.json")
+		}
+
 
       const allPackages = {}
       const tweaks_json = []
@@ -55,7 +64,8 @@ const modules = require("./modules"),
             Icon: debs[package][0].Icon,
             MD5sum: debs[package][0].MD5sum,
             Section: debs[package][0].Section,
-            Versions: debs[package].map(e => e.Version)
+            Versions: debs[package].map(e => e.Version),
+		      birthtimeMs: debs[package][0].birthtimeMs
          }
 
          tweaks_json.push(new Promise((res, rej) => {
@@ -63,15 +73,17 @@ const modules = require("./modules"),
                ...debs[package][0],
                Versions: debs[package].map(item => {
                   const changelog = {}
+					   let empty = true
 
                   for (const key in item) {
                      if (item[key] != debs[package][0][key]) {
                         changelog[key] = item[key]
+								empty = false
                      }
                   }
 
-                  return changelog
-               })
+                  return empty ? undefined : changelog
+               }).filter(Boolean)
             }), err => err ? rej() : res())
          }))
 

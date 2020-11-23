@@ -12,6 +12,7 @@ function tableToJson(tbl, path) {
    })
    if ( path ) {
       json.MD5sum = md5file.sync(path)
+      json.birthtimeMs = fs.statSync(path).birthtimeMs
    }
    return json
 }

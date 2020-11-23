@@ -1,23 +1,29 @@
 <template>
-   <div>
+   <div class="list-item-group$1">
       <h6 class="text-uppercase text-secondary"> {{ title }} </h6>
-      <ul class="list-item">
+      <ul class="list-item" :class="classUl">
          <li class="no-skip" v-if="buttonBack">
-            <a href="#">
-               <span :style="{ backgroundImage: 'url(' + require('@/assets/back.png') + ')'"></span>
-               <p class="ml-0"> Quay lại </p>
+            <a href="javascript:void(0)" @click="$emit('back'); state = 0">
+               <span :style="{ backgroundImage: 'url(' + require('@/assets/back.png') + ')' }"></span>
+               <p> Quay lại </p>
             </a>
          </li>
-         <li v-for="item in items">
-            <a :href="item.href">
-               <span :style="{ 'background-image': 'url(' + getIcon(item) + ')' }"></span>
-               <p> {{ item.Name }} </p>
+         <li v-for="(item, index) in items" :key="index">
+            <a :href="item.href" @click="$emit('click-item', item); state = multiple ? 0 : state">
+               <span :style="{ 'background-image': 'url(' + getIcon(item) + ')', width: item.NoIcon ? 0 : undefined }"></span>
+               <p :class="{ 'ml-0': item.NoIcon }">
+					   {{ item.filterName ? item.filterName(item) : item.Name }}
+                  <small v-if="item.Version"> v{{ item.Version[0] }} </small>
+					</p>
             </a>
          </li>
-         <li class="no-skip" v-if="buttonMore">
-            <a href="#">
+         <li class="no-skip" v-if="buttonMore && state < 2">
+            <a href="javascript:void(0)" @click="loadMore">
                <span style="width: 0"></span>
-               <p class="ml-0"> Xem thêm... </p>
+               <p class="ml-0">
+					   <i class="spinner spinner-border spinner-border-sm" v-show="state == 1"></i>
+						{{ message }}
+		         </p>
             </a>
          </li>
       </ul>
@@ -36,21 +42,51 @@
             requred: true
          },
          buttonMore: Boolean,
-         buttonBack: Boolean
+         buttonBack: Boolean,
+			load: Function,
+			classUl: [ Array, String, Object ],
+			multiple: Boolean
       },
+		data: () => ({
+         message: "Xem them...",
+			state: 0
+		}),
+		watch: {
+         items: {
+			   handler({ length }) {
+               if ( length < 20 && this.state < 2 ) {
+                  this.loadMore()
+			   	}
+		      },
+				immediate: true
+			}
+		},
       methods: {
+		   loadMore() {
+            this.message = "Dang tai"
+				this.state = 1
+				this.load && this.load({
+               loaded: () => [ this.message, this.state ] = [ "Xem them...", 0 ],
+					complete: () => [ this.message, this.state ] = [ "Khong con nua", 2 ]
+				})
+			},
          getIcon({ Icon, Section }) {
-            if (Icon) {
-               return Icon
+            if (Icon && !Icon.match(/^file:\/\//)) {
+				   return Icon 
             } else {
-               return require(`@/assets/${encodeURIComponent(Section)}.png`)
+				   try {
+                  return require(`@/assets/${encodeURIComponent(Section)}.png`)
+					} catch(e) {
+					   console.warn("Can't find icon.")
+                  return require("@/assets/unknown.png")
+					}
             }
          }
       }
    }
 </script>
 <style lang="scss" scoped>
-   :host {
+   .list-item-group\$1 {
       %border-4 {
          border-radius: 4px;
          border: 1px solid rgba(0, 0, 0, .1);
@@ -151,6 +187,9 @@
                   display: inline-block;
                   overflow: hidden;
                   text-overflow: ellipsis;
+						small {
+                     display: block;
+						}
                }
             }
 

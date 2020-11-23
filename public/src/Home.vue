@@ -10,7 +10,7 @@
          </div>
       </div>
       <list-item-group class="col-12" title="Package updates" :items="packageUpdates" button-more :load="loadMorePackageUpdates" />
-      <list-item-group class="col-12" title="Browser packages" :items="browserPackages" button-more :load="loadMoreBrowserPackages" :button-back="!!inModePackage" @back="changeModePackage(false)" @click-item="changeModePackage($event)" multiple/>
+      <list-item-group class="col-12" title="Browser packages" :items="browserPackages" button-more :load="loadMoreBrowserPackages" :button-back="!!inModePackage" @back="changeModePackage(false)" @click-item="changeModePackage($event)"/>
       <list-item-group class="col-12" title="Social" :items="social" />
 		<list-item-group class="col-12" title="Theme" :items="[ { NoIcon: true, Name: 'Change Theme' }]" class-ul="py-0" />
       <div class="col-12">
@@ -53,7 +53,7 @@
          loadMorePackageUpdates({ loaded, complete }) {
 		      let end = []
 				const length = this.packageUpdates.length
-            this.packageUpdates.push(...(end = this.$store.getters.packages.slice(length, Math.min(this.$store.getters.packages.length, length + 20))))
+            this.packageUpdates.push(...(end = this.$store.state.packages.slice(length, Math.min(this.$store.state.packages.length, length + 20))))
 				if ( end.length ) {
                loaded()
 				} else {
