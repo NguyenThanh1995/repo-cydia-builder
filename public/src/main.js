@@ -9,10 +9,9 @@ Vue.prototype.$inCydia = navigator.userAgent.search(/Cydia/) > -1
 Object.defineProperty(Vue.prototype, "$iOSVersion", {
    get() {
       const match = (navigator.appVersion).split("OS ")
-      return match ? .length > 1 ? match[1].split(" ")[0].replace(/_/g, ".") : "unknown"
+      return match && match.length > 1 ? match[1].split(" ")[0].replace("_", ".") : "unknown"
    }
 })
-
 
 new Vue({
    el: "#app",

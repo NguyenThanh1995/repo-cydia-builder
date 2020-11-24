@@ -131,8 +131,9 @@
       filters: {
          renderValue(text) {
             text = text.replace(/^\s|\s$/g, "")
-            const email = text.match(/<(\w+)>$/)?.1
-            text = text.replace(<(\w+)>$, "")
+            const tmp = text.match(/<(\w+)>$/)
+            const email = tmp && tmp[1]
+            text = text.replace(/<(\w+)>$/, "")
             
             return {
                text, email
