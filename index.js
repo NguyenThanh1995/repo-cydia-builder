@@ -44,13 +44,15 @@ const modules = require("./modules"),
          @not build found and new packages
       */
 
-      if ( fs.existsSync("./tweaks.json") && fs.lstatSync("./tweaks.json").isDirectory() && fs.readdirSync("./tweaks.json").length ) {
-         console.log(chalk.grey("Removing tweaks.json/*..."))
-		   fsExtra.emptyDirSync("./tweaks.json")
-		   console.log(chalk.yellow("Removed tweaks.json/*"))
-		} else {
+      if (fs.existsSync("./tweaks.json") && fs.lstatSync("./tweaks.json").isDirectory()) {
+         /*if (fs.readdirSync("./tweaks.json").length) {
+            console.log(chalk.grey("Removing tweaks.json/*..."))
+            fsExtra.emptyDirSync("./tweaks.json")
+            console.log(chalk.yellow("Removed tweaks.json/*"))
+         }*/
+      } else {
          fs.mkdirSync("./tweaks.json")
-		}
+      }
 
 
       const allPackages = {}
@@ -58,32 +60,40 @@ const modules = require("./modules"),
 
       for (const package in debs) {
          debs[package] = debs[package].sort((a, b) => a.Version > b.Version)
-         
+
          allPackages[package] = {
             Name: debs[package][0].Name,
             Icon: debs[package][0].Icon,
             MD5sum: debs[package][0].MD5sum,
             Section: debs[package][0].Section,
             Versions: debs[package].map(e => e.Version),
-		      birthtimeMs: debs[package][0].birthtimeMs
+            birthtimeMs: debs[package][0].birthtimeMs
          }
 
-         tweaks_json.push(new Promise((res, rej) => {
+         let oldData = {}
+         if (fs.existsSync(`./tweaks.json/${package}.json`)) {
+            oldData = require(`./tweaks.json/${package}.json`)
+         }
+
+         tweaks_json.push(await new Promise(async (res, rej) => {
+            const Version = []
+            for await (const item of debs[package]) {
+               const changelog = {
+                  v: item.Version,
+                  supprt: oldData?.Version?.find(e => e.v == item.Version)?.supprt || await modules.input(`${package} (${chalk.cyan(debs[package][0].Name)}) v${item.Version} support for iOS? `)
+               }
+
+               for (const key in item) {
+                  if (item[key] != debs[package][0][key]) {
+                     changelog[key] = item[key]
+                  }
+               }
+
+               Version.push(changelog)
+            }
             fs.writeFile(`./tweaks.json/${package}.json`, JSON.stringify({
                ...debs[package][0],
-               Versions: debs[package].map(item => {
-                  const changelog = {}
-					   let empty = true
-
-                  for (const key in item) {
-                     if (item[key] != debs[package][0][key]) {
-                        changelog[key] = item[key]
-								empty = false
-                     }
-                  }
-
-                  return empty ? undefined : changelog
-               }).filter(Boolean)
+               Version
             }), err => err ? rej() : res())
          }))
 

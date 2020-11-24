@@ -9,6 +9,10 @@ export default new Router({
       {
          path: "/",
          component: () => import("@/pages/Home.vue")
+      },
+      {
+         path: "/description",
+         component: () => import("@/pages/Description.vue")
       }
    ],
    scrollBehavior(from, to, saved) {

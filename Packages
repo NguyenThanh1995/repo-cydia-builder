@@ -1,83 +1,24 @@
-Package: git.shin.3dtools
+Package: git.shin.ytpp
 Architecture: iphoneos-arm
-Version: 1.0.5
-Section: Tweaks
-Maintainer: nguyenthanh1995 <thanhnguyennguyen1995@gmail.com>
-Depends: mobilesubstrate
-Conflicts: me.pulandres.appaze
-Filename: ./debs/git.shin.3dtools_1.0.5.deb
-Size: 1205188
-MD5sum: c0eddaaf6fba2f8b68dd235fb96fe59e
-SHA1: ac92105d2db3950d23ee970ec5ab5ef47d2f6bf8
-SHA256: 061bca3f7b590298925d2dbfb7ea82922db40d2def19daf1c98ed007e6d9f27d
-SHA512: 7c82b445402225542ef5a2d3c44320aa07befac83cf81c314e9c4f7f0c03b949726a933f2fee27a181cf7067aaf88e0c9b36e1c75a73edc33004d345dcf9ef45
-Homepage: https://nguyenthanh1995.github.io/
-Description: Add helpful tools to your 3D touch menu!
-Name: 3DTools Cracked
-Author: smokin1337 <smokin1337@gmail.com>
-Icon: file:///Library/PreferenceBundles/3DTools.bundle/icon@2x.png
-Sponsor: nguyenthanh1995 <https://nguyenthanh1995.github.io>
-Depiction: https://nguyenthanh1995.github.io/description.html?goto=git.shin.3dtools
-
-Package: git.shin.BigClock
-Architecture: iphoneos-arm
-Version: 1.0
-Section: Widgets
-Maintainer: nguyenthanh1995 <thanhnguyennguyen1995@gmail.com>
-Depends: mobilesubstrate, com.matchstic.xenhtml, com.junesiphone.xeninfo
-Filename: ./debs/git.shin.BigClock_1.0.deb
-Size: 575938
-MD5sum: b80cf4964e9deae378bb672872160971
-SHA1: 7f0dde9a2d75a9e76c6ae2224602d7b734ad9120
-SHA256: ef990cf2de9595ff860193dc93d30f740bbe746ecc60362dc7dc52224eee9463
-SHA512: aeb4491d01ec1855f8139d966f728ef05b386fa9ac09fd8a10d59fb163bf8283f9b9a829401271043a33e89a173d8ccba202f23d32f1959ecce21d4e25b02432
-Homepage: https://nguyenthanh1995.github.io/
-Description: Big Analog Clock HS&LS  Widget for XenHTML
-Name: BigClock Widget
-Author: serif61 <serif61@gmail.com>
-Sponsor: nguyenthanh1995 <https://nguyenthanh1995.github.io>
-Depiction: https://nguyenthanh1995.github.io/description.html?goto=git.shin.BigClock
-
-Package: git.shin.lpm
-Architecture: iphoneos-arm
-Version: 1.1.3
-Section: Tweaks
-Maintainer: nguyenthanh1995 <thanhnguyennguyen1995@gmail.com>
-Depends: mobilesubstrate, com.opa334.ccsupport, preferenceloader, applist, ws.hbang.common
-Filename: ./debs/git.shin.lpm_1.1.3.deb
-Size: 1877410
-MD5sum: aef56a7f5fd7afc97281b09e2173de78
-SHA1: eadb63a2e8267032e2cd309f9bd82c7501c49fee
-SHA256: f8c7fc89c3be371f65fc9bdf16d951855e848cd28bba68129f29b817b023518f
-SHA512: 0b09e31c371ed75af304e3dea4000d27a9c8245caec48f0d94264e166fe23e2db6e7c2c64593e3e0270462c2d27cfb897d0ffa6643d127ed199a19167b440558
-Homepage: https://nguyenthanh1995.github.io/
-Description: Save Your battery life
-Name: RealLPM Cracked
-Author: DylanDuff
-Sponsor: nguyenthanh1995 <https://nguyenthanh1995.github.io>
-Depiction: https://nguyenthanh1995.github.io/description.html?goto=git.shin.lpm
-
-Package: me.lightmann.transparentnotif
-Architecture: iphoneos-arm
-Version: 1.0.6.3-1
+Version: 1.4r-106
 Priority: optional
 Section: Tweaks
-Maintainer: BigBoss <bigboss@thebigboss.org>
-Installed-Size: 632
-Depends: mobilesubstrate, firmware (>= 12.0)
-Filename: ./debs/me.lightmann.transparentnotif_1.0.6.3-1.deb
-Size: 325638
-MD5sum: 428055619b3da44cf32c9da5eb42e205
-SHA1: 4bec2bec0488bfd7bc9a6e860a340ab67812cd28
-SHA256: 0f06dafea2b3c4b39695ab2ee7bc9b05350e4a3d9834319771253da2aeebc6c7
-SHA512: 0a0b7d039e09e863f16b2f5f24d50a0fcaed986b4b1e0e9878209dbf40111b9b1c26cf3e8bb540ffb6f94de46a8351b9b727cf1368fec5a9e4b0e825df61d18c
-Homepage: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=transparentnotifDp
-Description: Cleans up notification banners.
-Tag: purpose::extension, compatible::ios12, compatible::ios13
-Name: TransparentNotif
-Depiction: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=transparentnotifDp
-Sponsor: thebigboss.org <http://thebigboss.org>
-Author: Lightmann <lightmanns11@gmail.com>
-dev: lightmann
-Icon: file:///Library/PreferenceBundles/TransparentNotifPrefs.bundle/icon@2x.png
+Maintainer: nguyenthanh1995 <thanhnguyennguyen1995@gmail.com>
+Depends: mobilesubstrate, firmware (>= 7.0),com.unlimapps.uamediaexporthelper (>= 1.0r-15) | firmware (>= 10.0), com.unlimapps.uasharedtools (>= 2.2r-94)
+Conflicts: me.freemanrepo.cercube, com.cydia00.ytpp, com.unlimapps.jodeboxlib, com.unlimapps.ytpp
+Replaces: com.unlimapps.ytpp
+Filename: ./debs/git.shin.ytpp_1.4r-106.deb
+Size: 6668502
+MD5sum: f56b36488307cfc3688b2afd2960966a
+SHA1: b4ddf22d177b66c92fc5de9fcb5f4f340ab149ff
+SHA256: b386463b0badb9cbeee59bc8b069577695afcb981ab48f964e5405704c41972d
+SHA512: b822e845b3511edeabae292a14025ff104bb46ba4816853e3c1aeba29df927fabe1be739b7a18af119292aa784a4529d1be39992721394f197a8a592ff4c9ae9
+Homepage: https://nguyenthanh1995.github.io/
+Description: Download all YouTube Videos! Continue background playback and much more!!!
+Tag: purpose::extension, role::enduser
+Author: UnlimApps Inc
+Name: YT++ for YouTube
+dev: i4iphones
+Depiction: https://nguyenthanh1995.github.io/description.html?goto=git.shin.ytpp
+Sponsor: nguyenthanh1995 <https://nguyenthanh1995.github.io>
 

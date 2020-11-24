@@ -12,18 +12,18 @@
             <a :href="item.href" @click="$emit('click-item', item); state = multiple ? 0 : state">
                <span :style="{ 'background-image': 'url(' + getIcon(item) + ')', width: item.NoIcon ? 0 : undefined }"></span>
                <p :class="{ 'ml-0': item.NoIcon }">
-					   {{ item.filterName ? item.filterName(item) : item.Name }}
+                  {{ item.filterName ? item.filterName(item) : item.Name }}
                   <small v-if="item.Version"> v{{ item.Version[0] }} </small>
-					</p>
+               </p>
             </a>
          </li>
          <li class="no-skip" v-if="buttonMore && state < 2">
             <a href="javascript:void(0)" @click="loadMore">
                <span style="width: 0"></span>
                <p class="ml-0">
-					   <i class="spinner spinner-border spinner-border-sm" v-show="state == 1"></i>
-						{{ message }}
-		         </p>
+                  <i class="spinner spinner-border spinner-border-sm" v-show="state == 1"></i>
+                  {{ message }}
+               </p>
             </a>
          </li>
       </ul>
@@ -43,43 +43,43 @@
          },
          buttonMore: Boolean,
          buttonBack: Boolean,
-			load: Function,
-			classUl: [ Array, String, Object ],
-			multiple: Boolean
+         load: Function,
+         classUl: [Array, String, Object],
+         multiple: Boolean
       },
-		data: () => ({
+      data: () => ({
          message: "Xem them...",
-			state: 0
-		}),
-		watch: {
+         state: 0
+      }),
+      watch: {
          items: {
-			   handler({ length }) {
-               if ( length < 20 && this.state < 2 ) {
+            handler({ length }) {
+               if (length < 10 && this.state < 2) {
                   this.loadMore()
-			   	}
-		      },
-				immediate: true
-			}
-		},
+               }
+            },
+            immediate: true
+         }
+      },
       methods: {
-		   loadMore() {
+         loadMore() {
             this.message = "Dang tai"
-				this.state = 1
-				this.load && this.load({
-               loaded: () => [ this.message, this.state ] = [ "Xem them...", 0 ],
-					complete: () => [ this.message, this.state ] = [ "Khong con nua", 2 ]
-				})
-			},
+            this.state = 1
+            this.load && this.load({
+               loaded: () => [this.message, this.state] = ["Xem them...", 0],
+               complete: () => [this.message, this.state] = ["Khong con nua", 2]
+            })
+         },
          getIcon({ Icon, Section }) {
             if (Icon && !Icon.match(/^file:\/\//)) {
-				   return Icon 
+               return Icon
             } else {
-				   try {
+               try {
                   return require(`@/assets/${encodeURIComponent(Section)}.png`)
-					} catch(e) {
-					   console.warn("Can't find icon.")
+               } catch (e) {
+                  console.warn("Can't find icon.")
                   return require("@/assets/unknown.png")
-					}
+               }
             }
          }
       }
@@ -187,9 +187,10 @@
                   display: inline-block;
                   overflow: hidden;
                   text-overflow: ellipsis;
-						small {
+
+                  small {
                      display: block;
-						}
+                  }
                }
             }
 

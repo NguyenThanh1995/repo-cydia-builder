@@ -1,101 +1,40 @@
 <template>
    <div class="row">
-      <list-item-group class="col-12" title="Nguyenthanh Repo" :items="[{ Icon: require('@/assets/cydia7.png'), Name: 'Open Cydia', href: '#' }]">
-         <p class="small text-center text-secondary mt-2">Repo: https://nguyenthanh1995.github.io/</p>
-      </list-item-group>
+      <add-repo class="col-12" />
       <div class="col-12">
          <div class="text-center py-3 bg-white border-4">
             <b> {{ packagesLength }} </b> gói đã được tải lên.<br>
             Cập nhật gần nhất vào <b> {{ lastUpdate }} </b>
          </div>
       </div>
-      <list-item-group class="col-12" title="Package updates" :items="packageUpdates" button-more :load="loadMorePackageUpdates" />
-      <list-item-group class="col-12" title="Browser packages" :items="browserPackages" button-more :load="loadMoreBrowserPackages" :button-back="!!inModePackage" @back="changeModePackage(false)" @click-item="changeModePackage($event)" multiple/>
-      <list-item-group class="col-12" title="Social" :items="social" />
-		<list-item-group class="col-12" title="Theme" :items="[ { NoIcon: true, Name: 'Change Theme' }]" class-ul="py-0" />
-      <div class="col-12">
-         <p class="small text-center text-secondary">
-            Nguyen Thanh (shin-dev) © 2020
-         </p>
-      </div>
+      <package-updates class="col-12" />
+      <browser-packages class="col-12" />
+      <social-share class="col-12" />
+      <theme-change class="col-12" />
+      <copyright class="col-12" />
    </div>
 </template>
 <script>
-   import ListItemGroup from "@/components/ListItemGroup.vue"
+   import AddRepo from "@/components/AddRepo.vue"
+   import PackageUpdates from "@/components/PackageUpdates.vue"
+   import BrowserPackages from "@/components/BrowserPackages.vue"
+   import SocialShare from "@/components/SocialShare.vue"
+   import ThemeChange from "@/components/ThemeChange.vue"
+   import Copyright from "@/components/Copyright.vue"
+   
    export default {
-	   components: { ListItemGroup },
+      components: {
+         AddRepo,
+         PackageUpdates,
+         BrowserPackages,
+         SocialShare,
+         ThemeChange,
+         Copyright
+      },
       data: () => ({
          packagesLength: 0,
-         lastUpdate: null,
-         packageUpdates: [],
-			browserPackages: [],
-			inModePackage: false,
-
-         social: [
-            {
-               Icon: require('@/assets/github.png'),
-               Name: "Github",
-               href: "#"
-            },
-				{
-               Icon: require("@/assets/reddit.png"),
-					Name: "Reddit",
-					href: "#"
-				},
-            {
-               Icon: require('@/assets/twitter.png'),
-               Name: "Follow NguyenThanhDev",
-               href: "#"
-            }
-         ]
-      }),
-		methods: {
-         loadMorePackageUpdates({ loaded, complete }) {
-		      let end = []
-				const length = this.packageUpdates.length
-            this.packageUpdates.push(...(end = this.$store.getters.packages.slice(length, Math.min(this.$store.getters.packages.length, length + 20))))
-				if ( end.length ) {
-               loaded()
-				} else {
-               complete()
-				}
-			},
-			loadMoreBrowserPackages({ loaded, complete }) {
-			   let items = []
-            if ( this.inModePackage ) {
-               // in mode read all packages
-					items = this.$store.getters.sections[ this.inModePackage.Name ] || []
-				} else {
-               // in mode read type packages
-					const nameSections = Object.keys(this.$store.getters.sections)
-					items = nameSections.map(section => {
-					   let icon
-                  try {
-                     icon = require(`@/assets/${encodeURIComponent(section)}.png`)
-						} catch(e) {
-                     icon = require("@/assets/unknown.png")
-						}
-
-						return { Name: section, filterName: () => `${section} (${this.$store.getters.sections[section].length})`, Icon: icon, href: "javascript:void(0)" }
-					})
-				}
-				
-				let end = []
-				const length = this.browserPackages.length
-
-            this.browserPackages.push( ...(end = items.slice(length, Math.min(items.length, length + 20))))
-
-				if ( end.length ) {
-               loaded()
-				} else {
-				   complete()
-		      }
-			},
-			changeModePackage(item) {
-            this.inModePackage = item
-				this.browserPackages = []
-			}
-		}
+         lastUpdate: null
+      })
    }
 </script>
 <style lang="scss" scoped>
