@@ -5,7 +5,7 @@
       </div>
    </div>
 </template>
-<style>
+<style lang="scss">
   body {
      background-color: #f5f5fa;
   }
