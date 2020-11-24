@@ -1,9 +1,15 @@
 <template>
-   <list-item-group title="Browser packages" :items="browserPackages" button-more :load="loadMoreBrowserPackages" :button-back="!!inModePackage" @back="changeModePackage(false)" @click-item="changeModePackage($event)" multiple />
+   <list-item-group title="Browser packages" :items="browserPackages" button-more :load="loadMoreBrowserPackages" :button-back="!!inModePackage" @back="changeModePackage(false)" @click-item="changeModePackage($event)" multiple :size="size" />
 </template>
 <script>
    import ListItemGroup from "@/components/ListItemGroup.vue"
    export default {
+      props: {
+         size: {
+            type: Number,
+            default: 10
+         }
+      },
       components: { ListItemGroup },
       data: () => ({
          browserPackages: [],
@@ -33,7 +39,7 @@
             let end = []
             const length = this.browserPackages.length
 
-            this.browserPackages.push(...(end = items.slice(length, Math.min(items.length, length + 10))))
+            this.browserPackages.push(...(end = items.slice(length, Math.min(items.length, length + this.size))))
 
             if (end.length) {
                loaded()

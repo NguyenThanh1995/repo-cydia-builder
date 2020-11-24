@@ -4,7 +4,9 @@
    </list-item-group>
 </template>
 <script>
+   import ListItemGroup from "@/components/ListItemGroup.vue"
    export default {
+      components: { ListItemGroup },
       props: {
          package: String
       }

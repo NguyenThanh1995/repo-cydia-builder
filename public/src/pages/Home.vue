@@ -2,7 +2,7 @@
    <div class="row">
       <add-repo class="col-12" />
       <div class="col-12">
-         <div class="text-center py-3 bg-white border-4">
+         <div class="text-center py-3 bg-white border-custom">
             <b> {{ packagesLength }} </b> gói đã được tải lên.<br>
             Cập nhật gần nhất vào <b> {{ lastUpdate }} </b>
          </div>
@@ -15,12 +15,12 @@
    </div>
 </template>
 <script>
-   import AddRepo from "@/components/AddRepo.vue"
-   import PackageUpdates from "@/components/PackageUpdates.vue"
-   import BrowserPackages from "@/components/BrowserPackages.vue"
-   import SocialShare from "@/components/SocialShare.vue"
-   import ThemeChange from "@/components/ThemeChange.vue"
-   import Copyright from "@/components/Copyright.vue"
+   import AddRepo from "@/components/AddRepo"
+   import PackageUpdates from "@/components/PackageUpdates"
+   import BrowserPackages from "@/components/BrowserPackages"
+   import SocialShare from "@/components/SocialShare"
+   import ThemeChange from "@/components/ThemeChange"
+   import Copyright from "@/components/Copyright"
    
    export default {
       components: {
@@ -37,9 +37,3 @@
       })
    }
 </script>
-<style lang="scss" scoped>
-   .border-4 {
-      border-radius: 4px;
-      border: 1px solid rgba(0, 0, 0, .1);
-   }
-</style>

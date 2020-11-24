@@ -2,7 +2,7 @@
    <div class="row">
       <!-- /deep -->
       <!-- /open with cydia -->
-      <add-repo :package="tweak.package" />
+      <add-repo class="col-12" :package="tweak.package" />
       <!-- //open with cydia -->
       <!-- /google translate -->
       <div class="col-12">
@@ -15,7 +15,7 @@
       -->
       <div class="col-12">
          <h6 class="text-uppercase text-secondary"> {{ tweak.Name }} </h6>
-         <div class="compatibility"> {{ verifySupport }} </div>
+         <div class="compatibility border-custom"> {{ verifySupport }} </div>
          <p class="small text-secondary text-center mt-1">
             Current iOS {{ $iOSVersion }}
          </p>
@@ -23,21 +23,24 @@
       <div class="col-12">
          <div class="my-1 alert alert-danger" v-html="message" v-if="message"></div>
       </div>
-      <div class="col-12">
+      <div class="col-12 mt-2rem">
          <h6 class="text-uppercase text-secondary">Description</h6>
-         <div class="my-1 py-3 px-3 bg-white text-pre" v-html="tweak.Description"></div>
+         <div class="my-1 py-3 px-3 bg-white text-pre border-custom" v-html="tweak.Description"></div>
       </div>
-      <div class="col-12 package-info">
+      <div class="col-12 mt-2rem package-info">
          <h6 class="text-uppercase text-secondary">Package info</h6>
-         <ul>
-            <li v-for="(item, keyword) in tweakInfo">
-               <span class="text-capitalize"> {{ keyword }} </span>
-               <span class="right"> {{ item | renderValue || "-" }} </span>
-            </li>
-         </ul>
+         <list-item :items="tweakInfo" no-icon use-slot>
+            <template #item="{ index, value }">
+               <span class="text-capitalize"> {{ index }} </span>
+               <a :href="(value | renderValue).email" class="right" v-if="(value | renderValue).email">
+                  {{ (value | renderValue).text }}
+               </a>
+               <span class="right" v-else> {{ value }} </span>
+            </template>
+         </list-item>
       </div>
-      <package-updates class="col-12" />
-      <browser-packages class="col-12" />
+      <package-updates class="col-12" size="5" />
+      <browser-packages class="col-12" size="5" />
       <social-share class="col-12" />
       <theme-change class="col-12" />
       <copyright class="col-12" />
@@ -47,34 +50,38 @@
    .compatibility {
       height: 2rem;
       line-height: 2rem;
-      background: #ff0024;
+      background-color: #ff0024;
       width: 100%;
       text-align: center;
-      text-transform: italic;
+      font-style: italic;
       border-radius: 4px;
-      border: 1px solid rgba(0, 0, 0, .1);
+      color: #f8f9fa;
+
+      &.success {
+         background-color: #00ff24;
+      }
+
+      &.warning {
+         background-color: #ffff24;
+      }
    }
 
    .package-info {
-      ul {
-         margin: 0;
-         padding: 0;
-         list-style: none;
-         background-color: #fff;
-
-         li {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            .right {
-               flex: 0 0 1;
-               text-align: right;
-               padding-left: 5px;
-               display: block;
-               word-wrap: break-word;
-            }
+      .right {
+         flex: {
+            basis: 0;
+            shrink: 0;
+            grow: 1;
          }
+
+         ;
+         text-align: right;
+         padding-left: 5px;
+         display: block;
+         word-wrap: break-word;
+         color: #777;
+         display: block;
+         white-space: wrap;
       }
    }
 </style>
@@ -82,12 +89,13 @@
    import filesize from "file-size"
    import { format } from "timeago.js"
 
-   import AddRepo from "@/components/AddRepo.vue"
-   import PackageUpdates from "@/components/PackageUpdates.vue"
-   import BrowserPackages from "@/components/BrowserPackages.vue"
-   import SocialShare from "@/components/SocialShare.vue"
-   import ThemeChange from "@/components/ThemeChange.vue"
-   import Copyright from "@/components/Copyright.vue"
+   import AddRepo from "@/components/AddRepo"
+   import PackageUpdates from "@/components/PackageUpdates"
+   import BrowserPackages from "@/components/BrowserPackages"
+   import SocialShare from "@/components/SocialShare"
+   import ThemeChange from "@/components/ThemeChange"
+   import Copyright from "@/components/Copyright"
+   import ListItem from "@/components/ListItem"
 
    export default {
       components: {
@@ -96,9 +104,12 @@
          BrowserPackages,
          SocialShare,
          ThemeChange,
-         Copyright
+         Copyright,
+         ListItem
       },
       data: () => ({
+         verifySupport: "Supported",
+         message: "can not find",
          tweak: {
             "Package": "git.shin.3dtools",
             "Name": "3DTools Cracked",
@@ -121,19 +132,34 @@
       }),
       computed: {
          tweakInfo() {
+            const { Name, Package, Author, Version, Section, Depends, Conflicts, Architeture, MD5sum, birthtimeMs, Size, tag, dev } = this.tweak
             return {
-               ...this.tweak,
-               Size: filesize(this.tweak.Size),
-               Updated: format(this.tweak.birthtimeMs)
+               Name,
+               Identifier: Package,
+               Author,
+               Architeture,
+               Section,
+               Version,
+               Depends,
+               Conflicts,
+               MD5: MD5sum,
+               dev,
+               tag,
+               Size: filesize(Size).human(),
+               Updated: format(birthtimeMs - new Date().getTimezoneOffset() * 60 * 1000)
             }
          }
       },
       filters: {
          renderValue(text) {
-            text = text.replace(/^\s|\s$/g, "")
-            const tmp = text.match(/<(\w+)>$/)
-            const email = tmp && tmp[1]
-            text = text.replace(/<(\w+)>$/, "")
+            text = (text + "").replace(/^\s|\s$/g, "")
+            const tmp = text.match(/<([^\s]+)>$/)
+            let email = tmp && tmp[1]
+            text = text.replace(/<([^\s]+)>$/, "")
+            
+            if (email.match(/@[\w\d]+$/)) {
+               email = `mailto://${email}`
+            }
 
             return {
                text,
@@ -142,10 +168,10 @@
          }
       },
       mounted() {
-         new google.translate.TranslateElement({
+         /*new google.translate.TranslateElement({
             multilanguagePage: true,
             gaTrack: true
-         }, "google-translate")
+         }, "google-translate")*/
       }
    }
 </script>
