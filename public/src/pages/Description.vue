@@ -80,7 +80,7 @@
 </style>
 <script>
    import filesize from "file-size"
-   import timeago from "timeago.js"
+   import { format } from "timeago.js"
 
    import AddRepo from "@/components/AddRepo.vue"
    import PackageUpdates from "@/components/PackageUpdates.vue"
@@ -124,7 +124,7 @@
             return {
                ...this.tweak,
                Size: filesize(this.tweak.Size),
-               Updated: timeago(this.tweak.birthtimeMs)
+               Updated: format(this.tweak.birthtimeMs)
             }
          }
       },
@@ -134,9 +134,10 @@
             const tmp = text.match(/<(\w+)>$/)
             const email = tmp && tmp[1]
             text = text.replace(/<(\w+)>$/, "")
-            
+
             return {
-               text, email
+               text,
+               email
             }
          }
       },
