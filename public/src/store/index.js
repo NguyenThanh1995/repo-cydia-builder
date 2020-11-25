@@ -1,5 +1,6 @@
 import Vue from "vue"
 import Vuex, { Store } from "vuex"
+import { baseURL } from "@/config"
 
 Vue.use(Vuex)
 
@@ -33,25 +34,17 @@ const store = new Store({
 
 
 /* @json-server start */
-const data = require("@/../../Packages.json")
-/*
-for ( let index = 0; index < 200; index++ ) {
-   data[`git.shin.ytpp.${index}`] = {
-     Name: "Youtube++",
-     Version: Array(5).fill(1),
-     Section: "Tweaks",
-     birthtimeMs: Date.now(),
-     Icon: require("@/assets/cydia7.png")
-	}
-}*/
 
-
+import(`${baseURL}/Packages.json`)
+.then(text => JSON.parse(text))
+.then(json => {
 
 for (const key in data.packages) {
    store.commit("pushPackages", { Package: key, ...data[key] })
 }
 store.commit("setPackagesLength", data.length)
 store.commit("setLastUpdate", data.lastUpdate)
+})
 /* @end */
 
 
