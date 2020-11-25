@@ -1,6 +1,6 @@
 import Vue from "vue"
 import Vuex, { Store } from "vuex"
-import { baseURL } from "@/config"
+import config from "@/config"
 
 Vue.use(Vuex)
 
@@ -34,17 +34,16 @@ const store = new Store({
 
 
 /* @json-server start */
-
-import(`${baseURL}/Packages.json`)
-.then(text => JSON.parse(text))
-.then(json => {
-
+fetch(`${config.baseURL}/Packages.json`)
+.then(res => res.json())
+.then(data => {
 for (const key in data.packages) {
    store.commit("pushPackages", { Package: key, ...data[key] })
 }
 store.commit("setPackagesLength", data.length)
 store.commit("setLastUpdate", data.lastUpdate)
 })
+
 /* @end */
 
 

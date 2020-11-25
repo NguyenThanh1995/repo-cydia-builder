@@ -27,7 +27,7 @@ async function addDepiction(path, info) {
       const control = fs.readFileSync(pathFileControl, "utf8")
 
       fs.writeFileSync(pathFileControl, (control.replace(/Depiction:[^\n\r]+/, "") + `\nDepiction: ${env.Depiction}=${info.Package}@${info.Version}\n`)
-         .replace(/[\n\r]{2,}/, "\n"), { encoding: "utf8" })
+         .replace(/[\n\r]{2,}/g, "\n"), { encoding: "utf8" })
 
       // pack to debian
       await modules.exec(`dpkg -bR "${pathTmp}" "${path}"`)
@@ -206,7 +206,6 @@ function findVersion(debs, identifier, index = 0) {
       lastUpdate,
       length: countTweaks
    }))
-   fs.writeFileSync("Packages.length", countTweaks + "")
 
    console.log(chalk.yellow(`Writed done Packages.json!`))
    console.log(chalk.grey(`Writing files json to tweaks.json...`))
