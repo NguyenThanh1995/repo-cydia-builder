@@ -4,8 +4,40 @@ const modules = require("./modules"),
    md5file = require("md5-file"),
    env = require("dotenv").config().parsed,
    readline = require("readline"),
-   path = require("path"),
-   fsExtra = require("fs-extra")
+   path = require("path")
+
+function removeCharRegExp(string) {
+   return string.replace(/([`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/])/g, "\\$1")
+}
+
+async function addDepiction(path, info) {
+   if (!info.Depiction?.match(new RegExp(removeCharRegExp(`${env.Depiction}=${info.Package}@${info.Version}`)))) {
+
+      const pathTmp = `${__dirname}/tmp`
+
+      if (fs.existsSync(pathTmp)) {
+         fs.rmdirSync(pathTmp, { recursive: true })
+      }
+
+      // unpack
+      await modules.exec(`dpkg-deb -R "${path}" "${pathTmp}"`)
+
+      // read file control
+      const pathFileControl = `${pathTmp}/DEBIAN/control`
+      const control = fs.readFileSync(pathFileControl, "utf8")
+
+      fs.writeFileSync(pathFileControl, (control.replace(/Depiction:[^\n\r]+/, "") + `\nDepiction: ${env.Depiction}=${info.Package}@${info.Version}\n`)
+         .replace(/[\n\r]{2,}/, "\n"), { encoding: "utf8" })
+
+      // pack to debian
+      await modules.exec(`dpkg -bR "${pathTmp}" "${path}"`)
+      fs.rmdirSync(`${pathTmp}`, { recursive: true })
+
+      return modules.dpkgf(path)
+   } else {
+      return info
+   }
+}
 
 async function readDir() {
    let countTweaks = 0;
@@ -15,20 +47,27 @@ async function readDir() {
       throw new Error(`${__dirname}/debs is not folder.`)
    } else {
 
-      debs = await Promise.all(modules.readDebs(__dirname + "/debs")
-         .map(async item => {
-            const info = await modules.dpkgf(item)
-            let newpath = `${path.dirname(item)}/${info.Package}@${info.Version}.deb`
-            if (path.basename(item, ".deb") != path.basename(newpath, ".deb")) {
-               if (fs.existsSync(newpath) && fs.statSync(item).birthtimeMs > fs.statSync(newpath).birthtimeMs) {
-                  fs.unlinkSync(item)
-               } else {
-                  fs.renameSync(item, newpath)
-               }
+      debs = await modules.readDebs(__dirname + "/debs")
+
+      for (const index in debs) {
+         const item = debs[index]
+
+         const info = await addDepiction(item, await modules.dpkgf(item))
+
+
+         console.log(chalk.magenta(`Unpacked ${info.Package}@${info.Version} (${Math.round((index + 1) / debs.length * 100)}%)`))
+
+
+         let newpath = `${path.dirname(item)}/${info.Package}@${info.Version}.deb`
+         if (path.basename(item, ".deb") != path.basename(newpath, ".deb")) {
+            if (fs.existsSync(newpath) && fs.statSync(item).birthtimeMs > fs.statSync(newpath).birthtimeMs) {
+               fs.unlinkSync(item)
+            } else {
+               fs.renameSync(item, newpath)
             }
-            return info
-         })
-      )
+         }
+         debs[index] = info
+      }
 
       return {
          debs,
@@ -44,6 +83,7 @@ async function readDir() {
    }
 }
 
+
 function createFolder(name) {
 
    if (fs.existsSync(`${__dirname}/${name}`)) {
@@ -56,17 +96,17 @@ function createFolder(name) {
 
 }
 
-function findLastVersion(debs, identifier, index) {
+function findVersion(debs, identifier, index = 0) {
    const packages = []
 
    for (const length = debs.length; index < length; index++) {
-      if (item.Package === identifier) {
+      if (debs[index].Package === identifier) {
          packages.push({
             Name: debs[index].Name,
             Icon: debs[index].Icon,
             MD5sum: debs[index].MD5sum,
             Section: debs[index].Section,
-            Version: debs[index],
+            Version: debs[index].Version,
             birthtimeMs: debs[index].birthtimeMs
          })
       }
@@ -93,10 +133,16 @@ function findLastVersion(debs, identifier, index) {
 
    const allPackages = {}
    const tweaks_json = []
+   let lastUpdate = 0
 
-   debs.forEach((package, index) => {
+   for await (const package of debs) {
+
+      if (package.birthtimeMs > lastUpdate) {
+         lastUpdate = package.birthtimeMs
+      }
+
       if (!(package.Package in allPackages)) {
-         allPackages[package.Package] = findLastVersion(debs, package.Package, index)
+         allPackages[package.Package] = findVersion(debs, package.Package)[0]
       }
 
       let oldData = {},
@@ -106,21 +152,60 @@ function findLastVersion(debs, identifier, index) {
       }
 
 
-      tweaks_json.push(await new Promise(async (res, rej) => {
-         const newPackage = { ...package }
-         newPackage.Support = oldData?.Version || await modules.input(`${package.Package}@${package.Version} (${chalk.cyan(debs[package][0].Name)})? `)
+      tweaks_json.push(
+         await new Promise(async (res, rej) => {
+            const {
+               Name,
+               Package,
+               Author,
+               Version,
+               Section,
+               Depends,
+               Description,
+               Icon,
+               Conflicts,
+               Architeture,
+               MD5sum,
+               birthtimeMs,
+               Size,
+               tag,
+               dev
+            } = package
+            const newPackage = {
+               Name,
+               Package,
+               Author,
+               Version,
+               Section,
+               Depends,
+               Description,
+               Icon,
+               Conflicts,
+               Architeture,
+               MD5sum,
+               birthtimeMs,
+               Size,
+               tag,
+               dev,
+               Support: oldData && oldData.Support && oldData.MD5sum == package.MD5sum ? oldData.Support : await modules.input(`${package.Package}@${package.Version} (${chalk.cyan(package.Name)})? `)
+            }
 
 
-         fs.writeFile(`${__dirname}/tweaks.json/${package.Package}@${package.Version}.json`, JSON.stringify(newPackage), err => err ? rej() : res())
-      }))
+            fs.writeFile(`${__dirname}/tweaks.json/${Package}@${Version}.json`, JSON.stringify(newPackage), err => err ? rej() : res())
+         })
+      )
 
-   })
+   }
 
 
    // save all json
    console.log(chalk.grey(`Writing package.json...`))
 
-   fs.writeFileSync("Packages.json", JSON.stringify(allPackages))
+   fs.writeFileSync("Packages.json", JSON.stringify({
+      packages: allPackages,
+      lastUpdate,
+      length: countTweaks
+   }))
    fs.writeFileSync("Packages.length", countTweaks + "")
 
    console.log(chalk.yellow(`Writed done Packages.json!`))

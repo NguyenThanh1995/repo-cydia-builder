@@ -2,7 +2,7 @@
    <div class="row">
       <!-- /deep -->
       <!-- /open with cydia -->
-      <add-repo class="col-12" :package="tweak.package" />
+      <add-repo class="col-12" :package="$route.query.package" />
       <!-- //open with cydia -->
       <!-- /google translate -->
       <div class="col-12">
@@ -13,34 +13,61 @@
          //google translate
          /compatibility
       -->
-      <div class="col-12">
-         <h6 class="text-uppercase text-secondary"> {{ tweak.Name }} </h6>
-         <div class="compatibility border-custom"> {{ verifySupport }} </div>
+      <div class="col-12" v-if="tweak">
+         <h6 class="title"> {{ tweak.Name }} </h6>
+         <div class="compatibility border-custom" :class="{ success: isSupported }"> {{ isSupported ? "Compatible with " + tweakInfo.Support : ("Not compatible with " + $iOSVersion) }} </div>
          <p class="small text-secondary text-center mt-1">
             Current iOS {{ $iOSVersion }}
          </p>
       </div>
-      <div class="col-12">
-         <div class="my-1 alert alert-danger" v-html="message" v-if="message"></div>
+      <div class="col-12" v-if="message">
+         <div class="mt-1 alert" :class="[ 'alert-' + message.type ]" v-html="message" v-if="message.html($route)"></div>
       </div>
-      <div class="col-12 mt-2rem">
-         <h6 class="text-uppercase text-secondary">Description</h6>
-         <div class="my-1 py-3 px-3 bg-white text-pre border-custom" v-html="tweak.Description"></div>
+      <div class="col-12" v-if="tweak">
+         <h6 class="title">Description</h6>
+         <div class="my-1 py-12px px-15px bg-white text-pre border-custom" v-html="tweak.Description.replace(/\n/g, '<br>')"></div>
       </div>
-      <div class="col-12 mt-2rem package-info">
-         <h6 class="text-uppercase text-secondary">Package info</h6>
+      <div class="col-12 mt-2rem screenshots" v-if="tweak && tweak.Screenshots && tweak.Screenshots.length">
+         <h6 class="title"> Screenshots </h6>
+         <ul class="border-custom">
+            <li>
+               <div>
+                  <a v-for="item in tweak.Screenshots" :href="item">
+                     <img :src="item">
+                  </a>
+               </div>
+            </li>
+         </ul>
+      </div>
+      <div class="col-12" v-if="tweak && tweak.OpenSource">
+         <div class="mt-2rem alert alert-info text-center" style="background-color: #c5e8fe"> This tweak open source </div>
+      </div>
+      <div class="col-12 mt-2rem changelog" v-if="tweak && tweak.Changelog && tweak.Changelog.length">
+         <h6 class="title">Changelog</h6>
+         <ul class="border-custom">
+            <li class="" v-for="item in tweak.Changelog">
+               <div class="">
+                  <strong> {{ item.version }} </strong>
+                  <p>+ Updated: <span class="right"> {{ item.birthtimeMs | timeago }} </span> </p>
+                  <p>+ MD5: <span class="right"> {{ item.MD5sum }} </span></p>
+               </div>
+            </li>
+         </ul>
+      </div>
+      <div class="col-12 mt-2rem package-info" v-if="tweak">
+         <h6 class="title">Package info</h6>
          <list-item :items="tweakInfo" no-icon use-slot>
-            <template #item="{ index, value }">
+            <template #item="{ index, value, renderValue }">
                <span class="text-capitalize"> {{ index }} </span>
-               <a :href="(value | renderValue).email" class="right" v-if="(value | renderValue).email">
-                  {{ (value | renderValue).text }}
+               <a :href="renderValue (value).email" class="right" v-if="renderValue (value).email">
+                  {{ renderValue(value).text }}
                </a>
                <span class="right" v-else> {{ value }} </span>
             </template>
          </list-item>
       </div>
-      <package-updates class="col-12" size="5" />
-      <browser-packages class="col-12" size="5" />
+      <package-updates class="col-12" :size="5" />
+      <browser-packages class="col-12" :size="5" />
       <social-share class="col-12" />
       <theme-change class="col-12" />
       <copyright class="col-12" />
@@ -56,13 +83,75 @@
       font-style: italic;
       border-radius: 4px;
       color: #f8f9fa;
+      font-weight: 400;
 
       &.success {
          background-color: #00ff24;
+         color: #000;
       }
 
       &.warning {
          background-color: #ffff24;
+      }
+   }
+
+   .screenshots {
+      ul {
+         margin: 0;
+         padding: 0;
+         list-style: none;
+         background-color: #fff;
+
+         li {
+
+            div {
+               white-space: nowrap;
+               position: relative;
+               padding: 12px 15px;
+               overflow: scroll hidden;
+               margin-left: -5px;
+               text-align: center;
+
+               img {
+                  height: 320px;
+                  display: inline-block;
+                  object-fit: cover;
+                  margin-left: 5px;
+               }
+            }
+         }
+      }
+   }
+
+   .changelog {
+
+      ul {
+         margin: 0;
+         padding: 0;
+         list-style: none;
+         background-color: #fff;
+
+         li {
+            &:last-child {
+               div {
+                  padding-bottom: 12px;
+               }
+            }
+
+            div {
+               padding: 12px 15px 0 15px;
+
+               p {
+                  margin: 0;
+                  padding: 0;
+                  padding-left: 15px;
+
+                  .right {
+                     color: #777;
+                  }
+               }
+            }
+         }
       }
    }
 
@@ -86,6 +175,10 @@
    }
 </style>
 <script>
+   function removeCharRegExp(string) {
+      return string.replace(/([`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/])/g, "\\$1")
+   }
+
    import filesize from "file-size"
    import { format } from "timeago.js"
 
@@ -108,31 +201,30 @@
          ListItem
       },
       data: () => ({
-         verifySupport: "Supported",
-         message: "can not find",
-         tweak: {
-            "Package": "git.shin.3dtools",
-            "Name": "3DTools Cracked",
-            "Author": "smokin1337 <smokin1337@gmail.com>",
-            "Description": "Add helpful tools to your 3D touch menu!",
-            "Version": [{ "v": "1.0.5", "supprt": ">=5" }],
-            "Section": "Tweaks",
-            "Depends": "mobilesubstrate",
-            "Conflicts": "me.pulandres.appaze",
-            "Architecture": "iphoneos-arm",
-            "Icon": "file:///Library/PreferenceBundles/3DTools.bundle/icon@2x.png",
-            "Homepage": "https://nguyenthanh1995.github.io/",
-            "Maintainer": "nguyenthanh1995 <thanhnguyennguyen1995@gmail.com>",
-            "Sponsor": "nguyenthanh1995 <https://nguyenthanh1995.github.io>",
-            "Depiction": "https://nguyenthanh1995.github.io/description.html?goto=git.shin.3dtools",
-            "MD5sum": "c0eddaaf6fba2f8b68dd235fb96fe59e",
-            "birthtimeMs": 1606112285397.6907,
-            "Size": 1205188
-         }
+         message: {
+            type: "info",
+            html: route => `Loading description tweak <b>${route.query.package}</b>...`
+         },
+         tweak: null
       }),
       computed: {
          tweakInfo() {
-            const { Name, Package, Author, Version, Section, Depends, Conflicts, Architeture, MD5sum, birthtimeMs, Size, tag, dev } = this.tweak
+            const {
+               Name,
+               Package,
+               Author,
+               Version,
+               Section,
+               Depends,
+               Conflicts,
+               Architeture,
+               MD5sum,
+               birthtimeMs,
+               Size,
+               tag,
+               dev,
+               Support
+            } = this.tweak
             return {
                Name,
                Identifier: Package,
@@ -143,29 +235,61 @@
                Depends,
                Conflicts,
                MD5: MD5sum,
+               Support: Support.replace(/\s/g, "").split(",").sort().reverse().join(", "),
                dev,
                tag,
                Size: filesize(Size).human(),
                Updated: format(birthtimeMs - new Date().getTimezoneOffset() * 60 * 1000)
             }
+         },
+         isSupported() {
+            return this.tweak.Support.replace(/\s/g, "")
+               .split(",")
+               .some(item => item.split("&").every(item => {
+                  if (item.match(/^==?=?/)) {
+                     item = item.replace(/^==?=?/, "")
+                     return !!this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
+                  }
+                  if (item.match(/^>=/)) {
+                     item = item.replace(/^>=/, "")
+                     return this.$iOSVersion >= item || !!this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
+                  }
+                  if (item.match(/^>/)) {
+                     item = item.replace(/^>/, "")
+                     return this.$iOSVersion > item
+                  }
+                  if (item.match(/^<=/)) {
+                     item = item.replace(/^<=/, "")
+                     return this.$iOSVersion <= item || !!this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
+                  }
+                  if (item.match(/^</)) {
+                     item = item.replace(/^</, "")
+                     return this.$iOSVersion < item
+                  }
+                  if (item.match(/^\^/)) {
+                     item = item.replace(/^\^/, "")
+                     return !this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
+                  }
+                  if (item == "ALL") {
+                     return true
+                  }
+                  return !!this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
+               }))
+
          }
       },
       filters: {
-         renderValue(text) {
-            text = (text + "").replace(/^\s|\s$/g, "")
-            const tmp = text.match(/<([^\s]+)>$/)
-            let email = tmp && tmp[1]
-            text = text.replace(/<([^\s]+)>$/, "")
-            
-            if (email.match(/@[\w\d]+$/)) {
-               email = `mailto://${email}`
-            }
-
-            return {
-               text,
-               email
-            }
-         }
+         timeago: e => format(e - new Date().getTimezoneOffset() * 60 * 1000)
+      },
+      beforeCreate() {
+         import(`${this.$config.baseURL}/tweaks.json/${this.$route.query.package}.json`)
+            .then(text => JSON.parse(text))
+            .then(json => this.tweak = json)
+            .then(() => this.message = null)
+            .catch(() => this.message = {
+               type: "danger",
+               html: route => `Load description tweak ${route.query.package} failed.`
+            })
       },
       mounted() {
          /*new google.translate.TranslateElement({

@@ -2,13 +2,13 @@
    <ul class="list-item border-custom">
       <li class="no-skip" v-if="buttonBack">
          <a href="javascript:void(0)" @click="$emit('back'); state = 0">
-            <span :style="{ backgroundImage: 'url(' + require('@/assets/back.png') + ')' }"></span>
+            <span :style="{ backgroundImage: 'url(' + require('@/assets/back.png') + ')' }" class="icon"></span>
             <p> Quay lại </p>
          </a>
       </li>
       <li v-for="(item, index) in items" :key="index" :class="{ 'no-icon': noIcon }" v-if="item">
          <div v-if="useSlot">
-            <slot name="item" :index="index" :value="item" />
+            <slot name="item" :index="index" :value="item" :renderValue="renderValue" />
          </div>
          <a :href="item.href" @click="$emit('click-item', item); state = multiple ? 0 : state" v-else>
             <span :style="{ 'background-image': 'url(' + getIcon(item) + ')', width: item.NoIcon || noIcon ? 0 : undefined }" class="icon"></span>
@@ -77,6 +77,22 @@
                   console.warn("Can't find icon.")
                   return require("@/assets/unknown.png")
                }
+            }
+         },
+
+         renderValue(text) {
+            text = (text + "").replace(/^\s|\s$/g, "")
+            const tmp = text.match(/<([^\s]+)>$/)
+            let email = tmp && tmp[1]
+            text = text.replace(/<([^\s]+)>$/, "")
+
+            if (email && email.match(/@[\w\d]+$/)) {
+               email = `mailto://${email}`
+            }
+
+            return {
+               text,
+               email
             }
          }
       }

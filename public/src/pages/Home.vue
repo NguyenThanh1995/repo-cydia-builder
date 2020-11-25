@@ -3,8 +3,8 @@
       <add-repo class="col-12" />
       <div class="col-12">
          <div class="text-center py-3 bg-white border-custom">
-            <b> {{ packagesLength }} </b> gói đã được tải lên.<br>
-            Cập nhật gần nhất vào <b> {{ lastUpdate }} </b>
+            <b> {{ $store.state.packagesLength }} </b> gói đã được tải lên.<br>
+            Cập nhật gần nhất vào <b> {{ new Date($store.state.lastUpdate).toLocaleDateString() }} </b>
          </div>
       </div>
       <package-updates class="col-12" />
@@ -21,7 +21,7 @@
    import SocialShare from "@/components/SocialShare"
    import ThemeChange from "@/components/ThemeChange"
    import Copyright from "@/components/Copyright"
-   
+
    export default {
       components: {
          AddRepo,
@@ -30,10 +30,6 @@
          SocialShare,
          ThemeChange,
          Copyright
-      },
-      data: () => ({
-         packagesLength: 0,
-         lastUpdate: null
-      })
+      }
    }
 </script>

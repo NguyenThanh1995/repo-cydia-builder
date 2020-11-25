@@ -1,6 +1,6 @@
 <template>
    <div class="mt-2rem">
-      <h6 class="text-uppercase text-secondary"> {{ title }} </h6>
+      <h6 class="title"> {{ title }} </h6>
       <list-item :items="items" @back="$emit('back')" @click-item="$emit('click-item', $event)" :class="classUl" :button-more="buttonMore" :button-back="buttonBack" :load="load" :multiple="multiple" :size="size" />
       <slot name="default" />
    </div>
