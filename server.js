@@ -12,8 +12,8 @@ app.route("/Packages.json").all((req, res) => {
    res.json(JSON.parse(fs.readFileSync("./Packages.json", "utf8")))
 })
 app.route("/tweaks.json/:package").all((req, res) => {
-   if (fs.existsSync(`./tweaks.json/${req.params.package}.json`)) {
-      res.json(JSON.parse(fs.readFileSync(`./tweaks.json/${req.params.package}.json`)))
+   if (fs.existsSync(`./tweaks.json/${req.params.package}`)) {
+      res.json(JSON.parse(fs.readFileSync(`./tweaks.json/${req.params.package}`)))
    } else {
       res.send("Not Found")
    }

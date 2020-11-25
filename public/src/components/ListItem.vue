@@ -10,7 +10,7 @@
          <div v-if="useSlot">
             <slot name="item" :index="index" :value="item" :renderValue="renderValue" />
          </div>
-         <router-link :to="$config.Repo.url + '/description?package=' + item.Package + '@' + item.Version" @click="$emit('click-item', item); state = multiple ? 0 : state" v-else>
+         <router-link :to="'/package/' + item.Package + '@' + item.Version" @click="$emit('click-item', item); state = multiple ? 0 : state" v-else>
             <span :style="{ 'background-image': 'url(' + getIcon(item) + ')', width: item.NoIcon || noIcon ? 0 : undefined }" class="icon"></span>
             <p :class="{ 'ml-0': item.NoIcon }">
                {{ item.filterName ? item.filterName(item) : item.Name }}

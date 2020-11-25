@@ -11,7 +11,7 @@ function removeCharRegExp(string) {
 }
 
 async function addDepiction(path, info) {
-   if (!info.Depiction?.match(new RegExp(removeCharRegExp(`${env.Depiction}=${info.Package}@${info.Version}`)))) {
+   if (!info.Depiction?.match(new RegExp(removeCharRegExp(`${env.Depiction}${info.Package}@${info.Version}`)))) {
 
       const pathTmp = `${__dirname}/tmp`
 
@@ -26,7 +26,7 @@ async function addDepiction(path, info) {
       const pathFileControl = `${pathTmp}/DEBIAN/control`
       const control = fs.readFileSync(pathFileControl, "utf8")
 
-      fs.writeFileSync(pathFileControl, (control.replace(/Depiction:[^\n\r]+/, "") + `\nDepiction: ${env.Depiction}=${info.Package}@${info.Version}\n`)
+      fs.writeFileSync(pathFileControl, (control.replace(/Depiction:[^\n\r]+/, "") + `\nDepiction: ${env.Depiction}${info.Package}@${info.Version}\n`)
          .replace(/[\n\r]{2,}/g, "\n"), { encoding: "utf8" })
 
       // pack to debian

@@ -35,15 +35,17 @@ const store = new Store({
 
 /* @json-server start */
 fetch(`${config.baseURL}/Packages.json`)
-.then(res => res.json())
-.then(data => {
-for (const key in data.packages) {
-   store.commit("pushPackages", { Package: key, ...data[key] })
-}
-store.commit("setPackagesLength", data.length)
-store.commit("setLastUpdate", data.lastUpdate)
-})
-
+   .then(res => res.json())
+   .then(data => {
+      for (const key in data.packages) {
+         store.commit("pushPackages", {
+            Package: key,
+            ...data.packages[key]
+         })
+      }
+      store.commit("setPackagesLength", data.length)
+      store.commit("setLastUpdate", data.lastUpdate)
+   })
 /* @end */
 
 

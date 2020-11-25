@@ -11,7 +11,7 @@ export default new Router({
          component: () => import("@/pages/Home.vue")
       },
       {
-         path: "/description",
+         path: "/package/:package",
          component: () => import("@/pages/Description.vue")
       }
    ],

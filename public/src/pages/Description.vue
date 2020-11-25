@@ -2,7 +2,7 @@
    <div class="row">
       <!-- /deep -->
       <!-- /open with cydia -->
-      <add-repo class="col-12" :package="$route.query.package" />
+      <add-repo class="col-12" :package="$route.params.package" />
       <!-- //open with cydia -->
       <!-- /google translate -->
       <div class="col-12">
@@ -21,7 +21,7 @@
          </p>
       </div>
       <div class="col-12" v-if="message">
-         <div class="mt-1 alert" :class="[ 'alert-' + message.type ]" v-html="message" v-if="message.html($route)"></div>
+         <div class="mt-1 alert" :class="[ 'alert-' + message.type ]" v-html="message.html($route)"></div>
       </div>
       <div class="col-12" v-if="tweak">
          <h6 class="title">Description</h6>
@@ -203,7 +203,7 @@
       data: () => ({
          message: {
             type: "info",
-            html: route => `Loading description tweak <b>${route.query.package}</b>...`
+            html: route => `Loading description tweak <b>${route.params.package}</b>...`
          },
          tweak: null
       }),
@@ -282,13 +282,13 @@
          timeago: e => format(e - new Date().getTimezoneOffset() * 60 * 1000)
       },
       beforeCreate() {
-         import(`${this.$config.baseURL}/tweaks.json/${this.$route.query.package}.json`)
-            .then(text => JSON.parse(text))
+         fetch(`${this.$config.baseURL}/tweaks.json/${this.$route.params.package}.json`)
+            .then(res => res.json())
             .then(json => this.tweak = json)
             .then(() => this.message = null)
             .catch(() => this.message = {
                type: "danger",
-               html: route => `Load description tweak ${route.query.package} failed.`
+               html: route => `Load description tweak <b>${route.params.package}</b> failed.`
             })
       },
       mounted() {
