@@ -15,6 +15,7 @@ const store = new Store({
    },
    plugins: [crearePersistedstate("isDarkMode")],
    mutations: {
+      resetPackages: state => state.packages = [],
       pushPackages: (state, item) => state.packages.push(item),
       setPackagesLength: (state, length) => state.packagesLength = length,
       setLastUpdate: (state, val) => state.lastUpdate = val,
@@ -42,12 +43,14 @@ const store = new Store({
 fetch(`${config.baseURL}/Packages.json`)
    .then(res => res.json())
    .then(data => {
+      store.commit("resetPackages")
       for (const key in data.packages) {
          store.commit("pushPackages", {
             Package: key,
             ...data.packages[key]
          })
       }
+
       store.commit("setPackagesLength", data.length)
       store.commit("setLastUpdate", data.lastUpdate)
    })
