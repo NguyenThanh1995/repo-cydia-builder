@@ -1,5 +1,6 @@
 import Vue from "vue"
 import Vuex, { Store } from "vuex"
+import crearePersistedstate from "vuex-persistedstate"
 import config from "@/config"
 
 Vue.use(Vuex)
@@ -8,12 +9,16 @@ const store = new Store({
    state: {
       packages: [],
       packagesLength: 0,
-      lastUpdate: NaN
+      lastUpdate: NaN,
+      
+      isDarkMode: true
    },
+   plugins: [ crearePersistedstate("isDarkMode") ],
    mutations: {
       pushPackages: (state, item) => state.packages.push(item),
       setPackagesLength: (state, length) => state.packagesLength = length,
-      setLastUpdate: (state, val) => state.lastUpdate = val
+      setLastUpdate: (state, val) => state.lastUpdate = val,
+      toggleDarkMode: state => state.isDarkMode = !state.isDarkMode
    },
    getters: {
       packages: ({ packages }) => packages.sort((a, b) => a.birthtimeMs > b.birthtimeMs),

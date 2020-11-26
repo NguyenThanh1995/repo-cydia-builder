@@ -25,11 +25,11 @@
       </div>
       <div class="col-12" v-if="tweak">
          <h6 class="title">Description</h6>
-         <div class="my-1 py-12px px-15px bg-white text-pre border-custom" v-html="tweak.Description.replace(/\n/g, '<br>')"></div>
+         <div class="my-1 py-12px px-15px bg-white text-black border-custom" v-html="tweak.Description.replace(/\n/g, '<br>')"></div>
       </div>
       <div class="col-12 mt-2rem screenshots" v-if="tweak && tweak.Screenshots && tweak.Screenshots.length">
          <h6 class="title"> Screenshots </h6>
-         <ul class="border-custom">
+         <ul class="border-custom bg-white">
             <li>
                <div>
                   <a v-for="item in tweak.Screenshots" :href="item">
@@ -44,7 +44,7 @@
       </div>
       <div class="col-12 mt-2rem changelog" v-if="tweak && tweak.Changelog && tweak.Changelog.length">
          <h6 class="title">Changelog</h6>
-         <ul class="border-custom">
+         <ul class="border-custom bg-white text-black">
             <li class="" v-for="item in tweak.Changelog">
                <div class="">
                   <strong> {{ item.version }} </strong>
@@ -56,7 +56,7 @@
       </div>
       <div class="col-12 mt-2rem package-info" v-if="tweak">
          <h6 class="title">Package info</h6>
-         <list-item :items="tweakInfo" no-icon use-slot>
+         <list-item :items="tweakInfo" no-icon use-slot class="py-0">
             <template #item="{ index, value, renderValue }">
                <span class="text-capitalize"> {{ index }} </span>
                <a :href="renderValue (value).email" class="right" v-if="renderValue (value).email">
@@ -100,7 +100,6 @@
          margin: 0;
          padding: 0;
          list-style: none;
-         background-color: #fff;
 
          li {
 
@@ -129,7 +128,6 @@
          margin: 0;
          padding: 0;
          list-style: none;
-         background-color: #fff;
 
          li {
             &:last-child {
@@ -281,15 +279,21 @@
       filters: {
          timeago: e => format(e - new Date().getTimezoneOffset() * 60 * 1000)
       },
-      beforeCreate() {
-         fetch(`${this.$config.baseURL}/tweaks.json/${this.$route.params.package}.json`)
-            .then(res => res.json())
-            .then(json => this.tweak = json)
-            .then(() => this.message = null)
-            .catch(() => this.message = {
-               type: "danger",
-               html: route => `Load description tweak <b>${route.params.package}</b> failed.`
-            })
+      watch: {
+         "$route": {
+            handler() {
+               this.tweak = null
+               fetch(`${this.$config.baseURL}/tweaks.json/${this.$route.params.package}.json`)
+                  .then(res => res.json())
+                  .then(json => this.tweak = json)
+                  .then(() => this.message = null)
+                  .catch(() => this.message = {
+                     type: "danger",
+                     html: route => `Load description tweak <b>${route.params.package}</b> failed.`
+                  })
+            },
+            immediate: true
+         }
       },
       mounted() {
          /*new google.translate.TranslateElement({

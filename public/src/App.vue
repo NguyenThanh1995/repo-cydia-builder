@@ -1,13 +1,85 @@
 <template>
-   <div id="app">
+   <div id="app" :theme="$store.state.isDarkMode ? 'dark' : 'light'">
       <div class="container-fluid">
          <router-view />
       </div>
    </div>
 </template>
 <style lang="scss">
-   body {
+   body,
+   html {
+      position: relative;
+      display: block;
+   }
+
+   #app {
+      position: absolute;
+      width: 100%;
+      min-height: 100%;
       background-color: #f5f5fa;
+      font: 14px -apple-system-font, ".Helvetica NeueUI", "Helvetica Neue", sans-serif;
+      padding: 20px 0 35px;
+
+
+
+      .bg-white {
+         background-color: #fff;
+      }
+
+      .text-black {
+         color: #000;
+      }
+
+      .text-blue {
+         color: rgb(102, 128, 249);
+      }
+
+      .hover__bg-grey {
+         &:hover {
+            background-color: rgb(217, 217, 217);
+         }
+      }
+
+      .before__bg-secondary {
+         &:before {
+            background-color: #c8c7cc;
+         }
+      }
+
+
+      &[theme="dark"] {
+         background-color: #161616;
+
+         .bg-white {
+            background-color: #000 !important;
+         }
+
+         .text-black {
+            color: #fff !important;
+         }
+
+         .text-blue {
+            color: #eee !important;
+         }
+
+         .hover__bg-grey {
+            &:hover {
+               background-color: rgb((255-217), (255-217), (255-217)) !important;
+            }
+         }
+
+         .before__bg-secondary {
+            &:before {
+               background-color: rgb(55, 56, 51) !important;
+            }
+         }
+
+         .border-custom {
+            border-color: rgba(255, 255, 255, .2) !important;
+         }
+      }
+
+
 
       .title {
          color: rgb(109, 109, 114);
@@ -31,8 +103,6 @@
             top: 12px;
             bottom: 12px;
          }
-
-         ;
       }
 
       .px-15px {
@@ -40,15 +110,7 @@
             left: 15px;
             right: 15px;
          }
-
-         ;
       }
-   }
-</style>
-<style lang="scss" scoped>
-   #app {
-      font: 14px -apple-system-font, ".Helvetica NeueUI", "Helvetica Neue", sans-serif;
-      margin: 20px 0 35px;
    }
 </style>
 <script>

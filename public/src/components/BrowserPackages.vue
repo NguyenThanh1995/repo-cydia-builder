@@ -32,7 +32,11 @@
                      icon = require("@/assets/unknown.png")
                   }
 
-                  return { Name: section, filterName: () => `${section} (${this.$store.getters.sections[section].length})`, Icon: icon, href: "javascript:void(0)" }
+                  return {
+                     Name: section,
+                     filterName: () => `${section} (${this.$store.getters.sections[section].length})`,
+                     Icon: icon
+                  }
                })
             }
 

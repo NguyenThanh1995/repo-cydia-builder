@@ -1,25 +1,25 @@
 <template>
-   <ul class="list-item border-custom">
+   <ul class="list-item bg-white text-black border-custom">
       <li class="no-skip" v-if="buttonBack">
-         <a href="javascript:void(0)" @click="$emit('back'); state = 0">
+         <a href="javascript:void(0)" @click="$emit('back'); state = 0" class="item__child text-blue hover__bg-grey before__bg-secondary">
             <span :style="{ backgroundImage: 'url(' + require('@/assets/back.png') + ')' }" class="icon"></span>
             <p> Quay lại </p>
          </a>
       </li>
       <li v-for="(item, index) in items" :key="index" :class="{ 'no-icon': noIcon }" v-if="item">
-         <div v-if="useSlot">
+         <div v-if="useSlot" class="before__bg-secondary">
             <slot name="item" :index="index" :value="item" :renderValue="renderValue" />
          </div>
-         <router-link :to="'/package/' + item.Package + '@' + item.Version" @click="$emit('click-item', item); state = multiple ? 0 : state" v-else>
+         <span class="item__child text-blue hover__bg-grey before__bg-secondary" :is="item.Package ? 'router-link' : 'span'" :to="item.Package ? '/package/' + item.Package + '@' + item.Version : undefined" @click="$emit('click-item', item); state = multiple ? 0 : state" v-else>
             <span :style="{ 'background-image': 'url(' + getIcon(item) + ')', width: item.NoIcon || noIcon ? 0 : undefined }" class="icon"></span>
             <p :class="{ 'ml-0': item.NoIcon }">
                {{ item.filterName ? item.filterName(item) : item.Name }}
                <small v-if="item.Version"> v{{ item.Version }} </small>
             </p>
-         </router-link>
+         </span>
       </li>
       <li class="no-skip" v-if="buttonMore && state < 2">
-         <a href="javascript:void(0)" @click="loadMore">
+         <a href="javascript:void(0)" @click="loadMore" class="item__child text-blue hover__bg-grey before__bg-secondary">
             <span style="width: 0"></span>
             <p class="ml-0">
                <i class="spinner spinner-border spinner-border-sm" v-show="state == 1"></i>
@@ -118,7 +118,6 @@
       margin: 5px 0;
       padding: 6px 0;
       list-style: none;
-      background-color: #fff;
 
       li {
          margin: 0;
@@ -136,13 +135,8 @@
             display: none;
          }
 
-         &>a {
-            &:hover {
-               background-color: rgb(217, 217, 217);
-            }
-
+         &>.item__child {
             text-decoration: none;
-            color: rgb(102, 128, 249);
          }
 
          &>* {
@@ -191,7 +185,6 @@
                width: 100%;
                bottom: 0;
                left: (2em + 30 / 16);
-               background-color: #c8c7cc;
             }
 
             .icon {
@@ -214,11 +207,11 @@
             }
          }
 
-         &:last-child a:before {
+         &:last-child *:before {
             display: none
          }
 
-         &.no-skip a:after {
+         &.no-skip *:after {
             display: none
          }
       }

@@ -2,7 +2,7 @@
    <div class="row">
       <add-repo class="col-12" />
       <div class="col-12">
-         <div class="text-center py-3 bg-white border-custom">
+         <div class="text-center py-3 bg-white text-black border-custom">
             <b> {{ $store.state.packagesLength }} </b> gói đã được tải lên.<br>
             Cập nhật gần nhất vào <b> {{ new Date($store.state.lastUpdate).toLocaleDateString() }} </b>
          </div>
