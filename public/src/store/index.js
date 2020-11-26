@@ -10,10 +10,10 @@ const store = new Store({
       packages: [],
       packagesLength: 0,
       lastUpdate: NaN,
-      
+
       isDarkMode: true
    },
-   plugins: [ crearePersistedstate("isDarkMode") ],
+   plugins: [crearePersistedstate("isDarkMode")],
    mutations: {
       pushPackages: (state, item) => state.packages.push(item),
       setPackagesLength: (state, length) => state.packagesLength = length,
