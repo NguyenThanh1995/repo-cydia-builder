@@ -24,6 +24,18 @@ async function addDepiction(path, info) {
 
       // read file control
       const pathFileControl = `${pathTmp}/DEBIAN/control`
+
+      if ((fs.statSync(pathFileControl).mode & parseInt("777", 8)).toString(8) < "644") {
+         fs.chmodSync(pathFileControl, 644)
+      }
+      fs.readdirSync(`${pathTmp}/DEBIAN`).forEach(item => {
+         if (path.basename(item) != "control") {
+            if ((fs.statSync(item).mode & parseInt("777", 8)).toString(8) < 755) {
+               fs.chmodSync(item, 755)
+            }
+         }
+      })
+
       const control = fs.readFileSync(pathFileControl, "utf8")
 
       fs.writeFileSync(pathFileControl, (control.replace(/Depiction:[^\n\r]+/, "") + `\nDepiction: ${env.Depiction}${info.Package}@${info.Version}\n`)
