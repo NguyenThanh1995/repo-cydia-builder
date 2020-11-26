@@ -96,19 +96,30 @@ function createFolder(name) {
 
 }
 
+function toSimpleData({
+   Name,
+   Icon,
+   MD5sum,
+   Section,
+   Version,
+   birthtimeMs
+}) {
+   return {
+      Name,
+      Icon,
+      MD5sum,
+      Section,
+      Version,
+      birthtimeMs
+   }
+}
+
 function findVersion(debs, identifier, index = 0) {
    const packages = []
 
    for (const length = debs.length; index < length; index++) {
       if (debs[index].Package === identifier) {
-         packages.push({
-            Name: debs[index].Name,
-            Icon: debs[index].Icon,
-            MD5sum: debs[index].MD5sum,
-            Section: debs[index].Section,
-            Version: debs[index].Version,
-            birthtimeMs: debs[index].birthtimeMs
-         })
+         packages.push(toSimpleData(debs[index]))
       }
    }
 
@@ -136,13 +147,13 @@ function findVersion(debs, identifier, index = 0) {
    let lastUpdate = 0
 
    for await (const package of debs) {
-
+      const changelog = findVersion(debs, package.Package)
       if (package.birthtimeMs > lastUpdate) {
          lastUpdate = package.birthtimeMs
       }
 
       if (!(package.Package in allPackages)) {
-         allPackages[package.Package] = findVersion(debs, package.Package)[0]
+         allPackages[package.Package] = changelog[0]
       }
 
       let oldData = {},
@@ -187,7 +198,19 @@ function findVersion(debs, identifier, index = 0) {
                Size,
                tag,
                dev,
-               Support: oldData && oldData.Support && oldData.MD5sum == package.MD5sum ? oldData.Support : await modules.input(`${package.Package}@${package.Version} (${chalk.cyan(package.Name)})? `)
+               Support: oldData && oldData.Support && oldData.MD5sum == package.MD5sum ? oldData.Support : await modules.input(`${package.Package}@${package.Version} (${chalk.cyan(package.Name)})? `),
+               Screenshots: oldData && oldData.Screenshots,
+               OpenSource: oldData && oldData.OpenSource,
+               Changelog: changelog.map(({
+                  Version,
+                  MD5sum,
+                  birthtimeMs
+               }) => ({
+                  Version,
+                  MD5sum,
+                  birthtimeMs,
+                  is: Version == package.Version
+               }))
             }
 
 
