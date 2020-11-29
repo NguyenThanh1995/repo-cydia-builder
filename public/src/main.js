@@ -1,3 +1,5 @@
+import eruda from "eruda"
+eruda.init()
 import Vue from "vue"
 import App from "./App"
 import router from "./router"
@@ -9,7 +11,6 @@ Vue.prototype.$config = config
 
 Object.defineProperty(Vue.prototype, "$iOSVersion", {
    get() {
-      return "10.3.3"
       const match = (navigator.appVersion).split("OS ")
       return match && match.length > 1 ? match[1].split(" ")[0].replace("_", ".") : "unknown"
    }
