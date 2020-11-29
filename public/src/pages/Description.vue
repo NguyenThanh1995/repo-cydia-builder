@@ -42,12 +42,12 @@
       <div class="col-12" v-if="tweak && tweak.OpenSource">
          <div class="mt-2rem alert alert-info text-center" style="background-color: #c5e8fe"> This tweak open source </div>
       </div>
-      <div class="col-12 mt-2rem changelog" v-if="tweak && tweak.Changelog && tweak.Changelog.length">
+      <div class="col-12 mt-2rem changelog" v-if="tweak && tweak.Changelog && tweak.Changelog.length && !tweak.Changelog.every(item => item.Version == tweak.Version)">
          <h6 class="title">Changelog</h6>
          <ul class="border-custom bg-white text-black">
             <li class="" v-for="item in tweak.Changelog">
                <div class="">
-                  <strong> {{ item.version }} </strong>
+                  <strong> {{ item.Version }} </strong>
                   <p>+ Updated: <span class="right"> {{ item.birthtimeMs | timeago }} </span> </p>
                   <p>+ MD5: <span class="right"> {{ item.MD5sum }} </span></p>
                </div>

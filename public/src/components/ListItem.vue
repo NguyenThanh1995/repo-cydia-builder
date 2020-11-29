@@ -10,6 +10,12 @@
          <div v-if="useSlot" class="before__bg-secondary">
             <slot name="item" :index="index" :value="item" :renderValue="renderValue" />
          </div>
+         <a v-else-if="item.href" :href="item.href" class="item__child text-blue hover__bg-grey before__bg-secondary">
+            <span :style="{ 'background-image': 'url(' + getIcon(item) + ')', width: item.NoIcon || noIcon ? 0 : undefined }" class="icon"></span>
+            <p :class="{ 'ml-0': item.NoIcon }">
+               {{ item.filterName ? item.filterName(item) : item.Name }}
+            </p>
+         </a>
          <span class="item__child text-blue hover__bg-grey before__bg-secondary" :is="item.Package ? 'router-link' : 'span'" :to="item.Package ? '/package/' + item.Package + '@' + item.Version : undefined" @click="$emit('click-item', item); state = multiple ? 0 : state" v-else>
             <span :style="{ 'background-image': 'url(' + getIcon(item) + ')', width: item.NoIcon || noIcon ? 0 : undefined }" class="icon"></span>
             <p :class="{ 'ml-0': item.NoIcon }">
