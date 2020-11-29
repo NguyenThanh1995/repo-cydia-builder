@@ -11,7 +11,7 @@ const store = new Store({
       packagesLength: 0,
       lastUpdate: NaN,
 
-      isDarkMode: true,
+      isDarkMode: false,
       meta: {}
    },
    plugins: [crearePersistedstate("isDarkMode")],
