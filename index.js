@@ -42,10 +42,10 @@ async function addDepiction(pathF, info) {
          .replace(/[\n\r]{2,}/g, "\n"), { encoding: "utf8" })
 
       // pack to debian
-      await modules.exec(`dpkg -bR "${pathTmp}" "${path}"`)
+      await modules.exec(`dpkg -bR "${pathTmp}" "${pathF}"`)
       fs.rmdirSync(`${pathTmp}`, { recursive: true })
 
-      return modules.dpkgf(path)
+      return modules.dpkgf(pathF)
    } else {
       return info
    }
