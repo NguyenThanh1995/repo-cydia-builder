@@ -286,6 +286,11 @@
                fetch(`${this.$config.baseURL}/tweaks.json/${this.$route.params.package}.json`)
                   .then(res => res.json())
                   .then(json => this.tweak = json)
+                  /* /SEO */
+                  .then(({ Name, Description }) => {
+                     this.$store.commit("setMeta", { Name, Description })
+                  })
+                  /* //SEO */
                   .then(() => this.message = null)
                   .catch(() => this.message = {
                      type: "danger",

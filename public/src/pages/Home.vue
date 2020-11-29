@@ -30,6 +30,17 @@
          SocialShare,
          ThemeChange,
          Copyright
+      },
+      watch: {
+         $store: {
+            handler() {
+               this.$store.commit("setMeta", {
+                  Name: this.$config.Repo.Name,
+                  Description: `Repo cydia ${this.$config.Repo} by Nguyen Thanh`
+               })
+            },
+            immediate: true
+         }
       }
    }
 </script>

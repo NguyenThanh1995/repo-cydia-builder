@@ -11,7 +11,8 @@ const store = new Store({
       packagesLength: 0,
       lastUpdate: NaN,
 
-      isDarkMode: true
+      isDarkMode: true,
+      meta: {}
    },
    plugins: [crearePersistedstate("isDarkMode")],
    mutations: {
@@ -19,7 +20,8 @@ const store = new Store({
       pushPackages: (state, item) => state.packages.push(item),
       setPackagesLength: (state, length) => state.packagesLength = length,
       setLastUpdate: (state, val) => state.lastUpdate = val,
-      toggleDarkMode: state => state.isDarkMode = !state.isDarkMode
+      toggleDarkMode: state => state.isDarkMode = !state.isDarkMode,
+      setMeta: (store, { Name, Description }) => store.meta = { Name, Description }
    },
    getters: {
       packages: ({ packages }) => packages.sort((a, b) => a.birthtimeMs > b.birthtimeMs),

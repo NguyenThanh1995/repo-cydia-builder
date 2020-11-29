@@ -115,5 +115,19 @@
 </style>
 <script>
    import "bootstrap/scss/bootstrap.scss"
-   export default {}
+   export default {
+      metaInfo() {
+         document.title = this.$store.meta.Name
+         return {
+            meta: [
+               { charset: "utf-8" },
+               { name: "description", content: this.$stote.meta.Description },
+               { property: "og:description", content: this.$stote.meta.Description },
+               { property: "twitter:description", content: this.$stote.meta.Description },
+               { property: "og:title", content: this.$stote.meta.Name },
+               { property: "twitter:title", content: this.$stote.meta.Name },
+            ]
+         }
+      }
+   }
 </script>

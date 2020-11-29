@@ -1,5 +1,5 @@
 export default {
-   baseURL: "http://localhost:3000",
+   baseURL: "",
    Repo: {
       Name: "Nguyenthanh Repo",
       url: "https://nguyenthanh1995.github.io/"
