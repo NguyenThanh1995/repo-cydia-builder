@@ -10,7 +10,7 @@ function removeCharRegExp(string) {
    return string.replace(/([`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/])/g, "\\$1")
 }
 
-async function addDepiction(path, info) {
+async function addDepiction(pathF, info) {
    if (!info.Depiction?.match(new RegExp(removeCharRegExp(`${env.Depiction}${info.Package}@${info.Version}`)))) {
 
       const pathTmp = `${__dirname}/tmp`
@@ -20,7 +20,7 @@ async function addDepiction(path, info) {
       }
 
       // unpack
-      await modules.exec(`dpkg-deb -R "${path}" "${pathTmp}"`)
+      await modules.exec(`dpkg-deb -R "${pathF}" "${pathTmp}"`)
 
       // read file control
       const pathFileControl = `${pathTmp}/DEBIAN/control`
