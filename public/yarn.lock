@@ -2379,11 +2379,6 @@ error-stack-parser@^2.0.0:
   dependencies:
     stackframe "^1.1.1"
 
-eruda@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/eruda/-/eruda-2.4.1.tgz#dedc9b78546feb827d6ccafbfd7dae480509d2a2"
-  integrity sha512-rI16JoCsyy/pzXbPo7X6EMSUrhbtKZeFZGopiqrmCKxA8GlH61IXjlQAk1SWGpVpkJ6A1z7leuF8EmhFsU+OXQ==
-
 es-abstract@^1.17.0, es-abstract@^1.17.0-next.1, es-abstract@^1.17.2:
   version "1.17.7"
   resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.17.7.tgz#a4de61b2f66989fc7421676c1cb9787573ace54c"
@@ -6814,6 +6809,13 @@ vue-loader@^13.3.0:
     vue-hot-reload-api "^2.2.0"
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.6.0"
+
+vue-meta@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/vue-meta/-/vue-meta-2.4.0.tgz#a419fb4b4135ce965dab32ec641d1989c2ee4845"
+  integrity sha512-XEeZUmlVeODclAjCNpWDnjgw+t3WA6gdzs6ENoIAgwO1J1d5p1tezDhtteLUFwcaQaTtayRrsx7GL6oXp/m2Jw==
+  dependencies:
+    deepmerge "^4.2.2"
 
 vue-router@^3.0.1:
   version "3.4.9"
