@@ -11,7 +11,7 @@ function removeCharRegExp(string) {
 }
 
 async function addDepiction(pathF, info) {
-  if (!info.Depiction?.match(new RegExp(removeCharRegExp(`${env.Depiction}${info.Package}@${info.Version}`)))) {
+  if (!info.Depiction || !info.Depiction.match(new RegExp(removeCharRegExp(`${env.Depiction}${info.Package}@${info.Version}`)))) {
 
     const pathTmp = `${__dirname}/tmp`
 
@@ -31,7 +31,7 @@ async function addDepiction(pathF, info) {
     fs.readdirSync(`${pathTmp}/DEBIAN`).forEach(item => {
       item = path.resolve(`${pathTmp}/DEBIAN/${item}`)
       if (path.basename(item) != "control") {
-        fs.chmodSync(item, 755)
+        fs.chmodSync(item, 775)
       }
     })
 
