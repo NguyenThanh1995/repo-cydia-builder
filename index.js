@@ -30,9 +30,7 @@ async function addDepiction(pathF, info) {
       }
       fs.readdirSync(`${pathTmp}/DEBIAN`).forEach(item => {
          if (path.basename(item) != "control") {
-            if ((fs.statSync(item).mode & parseInt("777", 8)).toString(8) < 755) {
                fs.chmodSync(item, 755)
-            }
          }
       })
 
