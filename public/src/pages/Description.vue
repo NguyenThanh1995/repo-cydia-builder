@@ -96,6 +96,8 @@
    }
 
    .screenshots {
+     width: 100%;
+     position: relative;
       ul {
          margin: 0;
          padding: 0;
@@ -106,6 +108,7 @@
             div {
                white-space: nowrap;
                position: relative;
+               width: 100%;
                padding: 12px 15px;
                overflow: scroll hidden;
                margin-left: -5px;
