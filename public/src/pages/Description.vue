@@ -2,7 +2,7 @@
   <div class="row">
     <!-- /deep -->
     <!-- /open with cydia -->
-    <add-repo class="col-12" :package="tweak.Package" v-if="tweak" />
+    <add-repo class="col-12" :package="tweak.Package" v-if="tweak && $inCydia" />
     <!-- //open with cydia -->
     <!-- /google translate -->
     <div class="col-12">
