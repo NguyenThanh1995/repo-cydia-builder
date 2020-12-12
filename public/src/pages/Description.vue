@@ -188,6 +188,11 @@
     return string.replace(/([`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/])/g, "\\$1")
   }
 
+  function toOutFlase($1, template) {
+    const length = (template.match(/^\d+/) || [0])[0]
+    return "0".repeat(length - ($1 + "").length) + $1
+  }
+
   import filesize from "file-size"
   import { format } from "timeago.js"
 
@@ -260,19 +265,19 @@
               return !!this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
             }
             if (item.match(/^>=\d/)) {
-              item = item.replace(/^>=/, "")
+              item = toOutFlase(item.replace(/^>=/, ""), this.$iOSVersion)
               return this.$iOSVersion >= item || !!this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
             }
             if (item.match(/^>\d/)) {
-              item = item.replace(/^>/, "")
+              item = toOutFlase(item.replace(/^>/, ""), this.$iOSVersion)
               return this.$iOSVersion > item
             }
             if (item.match(/^<=\d/)) {
-              item = item.replace(/^<=/, "")
+              item = toOutFlase(item.replace(/^<=/, ""), this.$iOSVersion)
               return this.$iOSVersion <= item || !!this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
             }
             if (item.match(/^<\d/)) {
-              item = item.replace(/^</, "")
+              item = toOutFlase(item.replace(/^</, ""), this.$iOSVersion)
               return this.$iOSVersion < item
             }
             if (item.match(/^\^\d/)) {
