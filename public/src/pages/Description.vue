@@ -96,7 +96,6 @@
   }
 
   .row {
-    width: 100%;
     position: relative;
   }
 
