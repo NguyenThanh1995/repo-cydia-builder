@@ -138,7 +138,7 @@ function findVersion(debs, identifier, index = 0) {
     }
   }
 
-  return packages.sort((a, b) => toCharCode(a.Version) - toCharCode(b.Version))
+  return packages.sort((a, b) => toCharCode(b.Version) - toCharCode(a.Version))
 }
 
 !(async () => {
