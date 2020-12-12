@@ -95,11 +95,16 @@
     }
   }
 
+  .row {
+    width: 100%;
+    position: relative;
+  }
+
   .screenshots {
     width: 100%;
     position: relative;
 
-    overflow: scroll hidden;
+    overflow: hidden;
 
     ul {
       margin: 0;
@@ -113,7 +118,8 @@
           position: relative;
           width: 100%;
           padding: 12px 15px;
-          overflow: scroll hidden;
+          overflow-x: scroll;
+          overflow-y: hidden;
           margin-left: -5px;
           text-align: center;
 

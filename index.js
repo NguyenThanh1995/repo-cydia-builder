@@ -26,12 +26,12 @@ async function addDepiction(pathF, info) {
     const pathFileControl = `${pathTmp}/DEBIAN/control`
 
     if ((fs.statSync(pathFileControl).mode & parseInt("777", 8)).toString(8) < "644") {
-      fs.chmodSync(pathFileControl, 644)
+      fs.chmodSync(pathFileControl, "0644")
     }
     fs.readdirSync(`${pathTmp}/DEBIAN`).forEach(item => {
       item = path.resolve(`${pathTmp}/DEBIAN/${item}`)
       if (path.basename(item) != "control") {
-        fs.chmodSync(item, 775)
+        fs.chmodSync(item, "0755")
       }
     })
 
