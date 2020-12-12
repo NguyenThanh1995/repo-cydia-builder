@@ -1,11 +1,5 @@
 {
   "presets": [
-    {
-      "polyfills": [
-        "es.promise",
-        "es.symbol"
-      ]
-    },
     ["env", {
       "modules": false,
       "targets": {
