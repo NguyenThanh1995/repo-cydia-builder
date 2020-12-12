@@ -2,7 +2,7 @@
   <div class="row">
     <!-- /deep -->
     <!-- /open with cydia -->
-    <add-repo class="col-12" :package="$route.params.package" />
+    <add-repo class="col-12" :package="tweak.Package" v-if="tweak" />
     <!-- //open with cydia -->
     <!-- /google translate -->
     <div class="col-12">
@@ -255,27 +255,27 @@
         return this.tweak.Support.replace(/\s/g, "")
           .split(",")
           .some(item => item.split("&").every(item => {
-            if (item.match(/^==?=?/)) {
+            if (item.match(/^==?=?\d/)) {
               item = item.replace(/^==?=?/, "")
               return !!this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
             }
-            if (item.match(/^>=/)) {
+            if (item.match(/^>=\d/)) {
               item = item.replace(/^>=/, "")
               return this.$iOSVersion >= item || !!this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
             }
-            if (item.match(/^>/)) {
+            if (item.match(/^>\d/)) {
               item = item.replace(/^>/, "")
               return this.$iOSVersion > item
             }
-            if (item.match(/^<=/)) {
+            if (item.match(/^<=\d/)) {
               item = item.replace(/^<=/, "")
               return this.$iOSVersion <= item || !!this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
             }
-            if (item.match(/^</)) {
+            if (item.match(/^<\d/)) {
               item = item.replace(/^</, "")
               return this.$iOSVersion < item
             }
-            if (item.match(/^\^/)) {
+            if (item.match(/^\^\d/)) {
               item = item.replace(/^\^/, "")
               return !this.$iOSVersion.match(new RegExp(`^${removeCharRegExp(item)}`))
             }
