@@ -2,7 +2,7 @@ export default {
    baseURL: "",
    Repo: {
       Name: "Nguyenthanh Repo",
-      url: "https://nguyenthanh1995.github.io/"
+      url: "https://nguyenthanh1995.github.io/repo"
    },
    Social: [
       {
